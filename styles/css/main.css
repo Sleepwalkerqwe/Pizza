@@ -61,14 +61,14 @@ a {
 }
 
 .menu {
-  width: 235px;
+  width: 16%;
   padding: 25vh 10px;
   background: rgba(20, 20, 20, 0.5);
   height: 100vh;
   border-right: 15px solid #7b1717;
 
   position: fixed;
-  left: -221px;
+  left: -15%;
   transition: 0.4s ease;
 }
 

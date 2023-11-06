@@ -103,7 +103,7 @@ function popupContainerFill() {
   popupProductList.innerHTML = null;
   const savedCart = JSON.parse(localStorage.getItem("cart"));
   myCart.products = savedCart.products;
-  const productsHTML = myCart.products.map((product) => {
+  const productsHTML = myCart.products.map((product, index) => {
     const productItem = document.createElement("div");
     productItem.classList.add("popup__product");
 
@@ -129,7 +129,7 @@ function popupContainerFill() {
     productDelete.innerHTML = "&#10006;";
 
     productDelete.addEventListener("click", () => {
-      myCart.removeProduct(product);
+      myCart.removeProduct(index);
       localStorage.setItem("cart", JSON.stringify(myCart));
       popupContainerFill();
     });

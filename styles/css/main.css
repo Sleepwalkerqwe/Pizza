@@ -413,6 +413,23 @@ footer {
   color: #ff6633;
 }
 
+.card__add1 {
+  display: block;
+  width: 100%;
+  font-weight: 400;
+  font-size: 17px;
+  color: #70c05b;
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #70c05b;
+  border-radius: 4px;
+  cursor: pointer;
+  -webkit-transition: 0.2s;
+  -o-transition: 0.2s;
+  transition: 0.2s;
+  margin-top: auto;
+}
+
 .card__add {
   display: block;
   width: 100%;

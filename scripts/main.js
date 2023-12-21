@@ -22,40 +22,54 @@ const cart = document.querySelector("#cart");
 
 class Cart {
   products;
+
   constructor() {
     this.products = [];
   }
+
   get count() {
-    return this.products.length;
+    return this.products.reduce((acc, product) => acc + product.quantity, 0);
   }
+
   addProduct(product) {
-    this.products.push(product);
+    const existingProduct = this.products.find(
+      (existing) => existing.name === product.name
+    );
+
+    if (existingProduct) {
+      // Если продукт уже существует, увеличиваем его количество
+      existingProduct.quantity += 1;
+    } else {
+      // Если продукт не в корзине, добавляем его с количеством 1
+      product.quantity = 1;
+      this.products.push(product);
+    }
   }
+
   removeProduct(index) {
     this.products.splice(index, 1);
   }
+
   get cost() {
-    const prices = this.products.map((product) => {
-      return toNum(product.price);
-    });
-    const sum = prices.reduce((acc, num) => {
-      return acc + num;
-    }, 0);
-    return sum;
+    const totalCost = this.products.reduce(
+      (acc, product) => acc + toNum(product.price) * product.quantity,
+      0
+    );
+    return totalCost;
   }
-
-
 }
 
 class Product {
   imageSrc;
   name;
   price;
+  quantity;
 
   constructor(card) {
     this.imageSrc = card.querySelector(".card__image").children[0].src;
     this.name = card.querySelector(".card__title").innerText;
     this.price = card.querySelector(".card__price--common").innerText;
+    this.quantity = 0;
   }
 }
 
@@ -69,7 +83,7 @@ const savedCart = JSON.parse(localStorage.getItem("cart"));
 myCart.products = savedCart.products;
 cartNum.textContent = myCart.count;
 
-myCart.products = cardAddArr.forEach((cardAdd) => {
+cardAddArr.forEach((cardAdd) => {
   cardAdd.addEventListener("click", (e) => {
     e.preventDefault();
     const card = e.target.closest(".card");
@@ -90,7 +104,6 @@ const body = document.body;
 const popupContainer = document.querySelector("#popup_container");
 const popupProductList = document.querySelector("#popup_product_list");
 const popupCost = document.querySelector("#popup_cost");
-
 
 cart.addEventListener("click", (e) => {
   e.preventDefault();
@@ -124,9 +137,22 @@ function popupContainerFill() {
     productPrice.classList.add("popup__product-price");
     productPrice.innerHTML = toCurrency(toNum(product.price));
 
+    const productQuantityInput = document.createElement("input");
+    productQuantityInput.classList.add("popup__product-quantity-input");
+    productQuantityInput.setAttribute("type", "number");
+    productQuantityInput.setAttribute("min", "1");
+    productQuantityInput.setAttribute("value", product.quantity);
+
     const productDelete = document.createElement("button");
     productDelete.classList.add("popup__product-delete");
     productDelete.innerHTML = "&#10006;";
+
+    productQuantityInput.addEventListener("change", (e) => {
+      const newQuantity = parseInt(e.target.value, 10);
+      myCart.products[index].quantity = newQuantity;
+      localStorage.setItem("cart", JSON.stringify(myCart));
+      popupContainerFill();
+    });
 
     productDelete.addEventListener("click", () => {
       myCart.removeProduct(index);
@@ -137,6 +163,7 @@ function popupContainerFill() {
     productWrap1.appendChild(productImage);
     productWrap1.appendChild(productTitle);
     productWrap2.appendChild(productPrice);
+    productWrap2.appendChild(productQuantityInput);
     productWrap2.appendChild(productDelete);
     productItem.appendChild(productWrap1);
     productItem.appendChild(productWrap2);
@@ -155,4 +182,13 @@ popupClose.addEventListener("click", (e) => {
   e.preventDefault();
   popup.classList.remove("popup--open");
   body.classList.remove("lock");
+});
+document.addEventListener("DOMContentLoaded", function () {
+  var orderButton = document.querySelector('.card__add1');
+  var orderContainer = document.querySelector('#popup_container');
+
+  orderButton.addEventListener('click', function () {
+    var orderNumber = Math.floor(Math.random() * 1000) + 1;
+    alert('Ваш заказ принят, номер заказа: ' + orderNumber);
+  });
 });

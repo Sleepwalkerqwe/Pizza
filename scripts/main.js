@@ -192,3 +192,125 @@ document.addEventListener("DOMContentLoaded", function () {
     alert('Ваш заказ принят, номер заказа: ' + orderNumber);
   });
 });
+
+
+// поиск
+
+function searchProducts() {
+  const term = searchInput.value.toLowerCase();
+  const allCards = document.querySelectorAll(".card");
+
+  allCards.forEach((card) => {
+    const product = new Product(card);
+    const isVisible = product.name.toLowerCase().includes(term);
+
+    card.style.display = isVisible ? "block" : "none";
+  });
+
+}
+
+const searchButton = document.querySelector("#searchButton");
+
+searchButton.addEventListener("click", () => {
+  searchProducts();
+});
+const resetSearchButton = document.querySelector("#resetSearch");
+
+resetSearchButton.addEventListener("click", () => {
+  location.reload();
+
+});
+
+
+
+let sortField = ""; // Поле для сортировки
+let sortOrder = "asc"; // Порядок сортировки по умолчанию
+
+// Пример для сортировки по имени при клике на кнопку
+const sortByNameButton = document.querySelector("#sortByNameButton");
+sortByNameButton.addEventListener("click", () => {
+  sortField = "name";
+  toggleSortOrder();
+  applySort();
+});
+
+// Пример для сортировки по цене при клике на кнопку
+const sortByPriceButton = document.querySelector("#sortByPriceButton");
+sortByPriceButton.addEventListener("click", () => {
+  sortField = "price";
+  toggleSortOrder();
+  applySort();
+});
+
+// Функция для переключения порядка сортировки
+function toggleSortOrder() {
+  sortOrder = sortOrder === "asc" ? "desc" : "asc";
+}
+
+// Функция для сортировки данных
+function applySort() {
+  const allCards = document.querySelectorAll(".card");
+  const sortedCards = Array.from(allCards).sort((a, b) => {
+    const valueA = getValue(a, sortField);
+    const valueB = getValue(b, sortField);
+
+    if (sortOrder === "asc") {
+      return valueA.localeCompare(valueB, undefined, { sensitivity: "base" });
+    } else {
+      return valueB.localeCompare(valueA, undefined, { sensitivity: "base" });
+    }
+  });
+
+  const cardsContainer = document.querySelector(".cards");
+  cardsContainer.innerHTML = ""; // Очистим контейнер от текущих карточек
+
+  sortedCards.forEach((card) => {
+    cardsContainer.appendChild(card);
+  });
+}
+
+// Функция для получения значения сортируемого поля
+function getValue(card, field) {
+  switch (field) {
+    case "name":
+      return card.querySelector(".card__title").innerText.toLowerCase();
+    case "price":
+      return card.querySelector(".card__price--common").innerText;
+    default:
+      return "";
+  }
+}
+
+
+
+// Добавим новые элементы
+const minPriceInput = document.querySelector("#minPrice");
+const maxPriceInput = document.querySelector("#maxPrice");
+const applyFilterButton = document.querySelector("#applyFilterButton");
+
+// Обработчик нажатия кнопки фильтрации
+applyFilterButton.addEventListener("click", () => {
+  applyFilters();
+});
+
+// Функция для применения фильтров
+function applyFilters() {
+  const minPrice = parseFloat(minPriceInput.value) || 0;
+  const maxPrice = parseFloat(maxPriceInput.value) || Infinity;
+
+  const allCards = document.querySelectorAll(".card");
+
+  allCards.forEach((card) => {
+    const product = new Product(card);
+    const price = parseFloat(product.price);
+
+    const isVisible = price >= minPrice && price <= maxPrice;
+
+    card.style.display = isVisible ? "block" : "none";
+  });
+}
+
+// Добавим слушатели изменения для автоматической фильтрации при вводе значений
+minPriceInput.addEventListener("input", applyFilters);
+maxPriceInput.addEventListener("input", applyFilters);
+

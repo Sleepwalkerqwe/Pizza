@@ -26,7 +26,19 @@
     </div>
 
     <!--  -->
-    <!--  -->
+    <!-- Ваш инпут поиска -->
+    <input type="text" id="searchInput" placeholder="Поиск...">
+    <button id="searchButton">Искать</button>
+
+    <button id="sortByNameButton">Сортировать по имени</button>
+    <button id="sortByPriceButton">Сортировать по цене</button>
+    <label id="minPriceLabel">Минимальная цена:</label>
+    <input type="number" id="minPrice" placeholder="Мин. цена">
+
+    <label id="maxPriceLabel">Максимальная цена:</label>
+    <input type="number" id="maxPrice" placeholder="Макс. цена">
+    <button id="resetSearch">Сбросить</button>
+    <!--   -->
     <section class="product">
         <div class="product__info">
             <div class="container">
@@ -34,6 +46,7 @@
             </div>
         </div>
         <div class="cards">
+
             <div class="card">
                 <div class="card__top">
                     <a href="#" class="card__image">
@@ -50,6 +63,7 @@
                     <button class="card__add">В кошик</button>
                 </div>
             </div>
+
             <div class="card">
                 <div class="card__top">
                     <a href="#" class="card__image">
